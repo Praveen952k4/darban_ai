@@ -1,15 +1,12 @@
 
 import './App.css'
-import Game from './pages/Game'
-import RootLayout from './RootLayout'
+import Game from './pages/Game.jsx'
 
 function App() {
   
 
   return (
-    <RootLayout>
-      <Game />
-    </RootLayout>
+    <Game />
   )
 }
 
