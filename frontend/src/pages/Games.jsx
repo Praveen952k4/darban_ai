@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/sidebar';
 import Bottombar from '../components/Bottombar';
-import PlayGames from '../components/PlayGames.jsx';
+import PlayGames from '../components/playgames';
 
 const Games = () => {
   return (
@@ -11,7 +11,7 @@ const Games = () => {
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
         <div className="flex-1 p-4 overflow-y-auto h-full">
-         
+         <PlayGames />
         </div>
       </div>
       <Bottombar />
