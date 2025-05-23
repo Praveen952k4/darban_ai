@@ -10,7 +10,8 @@ const SideBar = () => {
    <section className="hidden md:flex w-1/4 leftsidebar flex-col mt-4 mb-2.5 h-screen px-4">
   <div className="flex w-full flex-1 flex-col gap-6">
     {sidebarLinks.map((link) => {
-  const isActive = pathname === link.route || pathname.includes(link.route);
+  const isActive =
+    link.route === "/" ? pathname === "/" : pathname.startsWith(link.route);
 
   return (
     <Link
@@ -25,6 +26,7 @@ const SideBar = () => {
     </Link>
   );
 })}
+
 
   </div>
 </section>
