@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from '../components/Navbar';
 import Bottombar from '../components/Bottombar';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../components/SideBar';
 import Profile from '../components/Profile';
 
 const Help = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import Sidebar from '../components/sidebar';
+import Sidebar from '../components/SideBar';
 import Bottombar from '../components/Bottombar';
 import Welcome from '../components/Welcome';
 
