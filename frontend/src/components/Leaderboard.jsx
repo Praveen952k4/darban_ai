@@ -42,150 +42,75 @@ const Leaderboard = () => {
   }, []);
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(to bottom, #0f172a, #000)",
-        color: "white",
-        padding: "2rem",
-      }}
-    >
-      <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "2rem",
-          }}
-        >
+    <div className="min-h-screen w-full bg-gradient-to-b from-slate-900 to-black text-white px-4 sm:px-8 py-8">
+      <div className="max-w-5xl mx-auto w-full">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:justify-between items-center mb-8 gap-4 text-center">
           <button
             onClick={() => {
               audioService.playSound("click");
               window.history.back();
             }}
-            style={{
-              padding: "0.5rem 1rem",
-              border: "1px solid white",
-              backgroundColor: "transparent",
-              color: "white",
-              borderRadius: "0.25rem",
-              cursor: "pointer",
-            }}
+            className="border border-white text-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
           >
             Back
           </button>
-          <h1
-            style={{
-              fontSize: "2.5rem",
-              fontWeight: "bold",
-              background: "linear-gradient(to right, #3b82f6, #f43f5e)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              textAlign: "center",
-            }}
-          >
+
+          <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-500 to-pink-500 bg-clip-text text-transparent">
             Leaderboard
           </h1>
-          <div style={{ width: "80px" }}></div>
+
+          <div className="w-[80px]" />
         </div>
 
-        <div
-          style={{
-            backgroundColor: "#1f2937",
-            borderRadius: "0.5rem",
-            overflow: "hidden",
-            boxShadow: "0 0 10px #000",
-          }}
-        >
-          <div style={{ padding: "1.5rem" }}>
-            <h2
-              style={{
-                fontSize: "1.5rem",
-                fontWeight: "bold",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-            >
+        {/* Leaderboard Box */}
+        <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+          <div className="p-6">
+            <h2 className="text-xl font-bold flex items-center gap-2">
               <Trophy size={24} color="#facc15" />
               Top Players
             </h2>
-            <hr style={{ margin: "1rem 0", borderColor: "#374151" }} />
+            <hr className="my-4 border-gray-600" />
           </div>
 
+          {/* Loading Spinner */}
           {isLoading ? (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "10rem",
-              }}
-            >
-              <div
-                style={{
-                  height: "3rem",
-                  width: "3rem",
-                  border: "4px solid white",
-                  borderBottom: "4px solid transparent",
-                  borderRadius: "50%",
-                  animation: "spin 1s linear infinite",
-                }}
-              />
+            <div className="flex justify-center items-center h-40">
+              <div className="w-12 h-12 border-4 border-white border-b-transparent rounded-full animate-spin" />
             </div>
           ) : (
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead style={{ backgroundColor: "#374151" }}>
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-collapse text-sm">
+                <thead className="bg-gray-700 text-left">
                   <tr>
-                    <th style={{ padding: "0.75rem", textAlign: "center" }}>Rank</th>
-                    <th style={{ padding: "0.75rem", textAlign: "left" }}>Player</th>
-                    <th style={{ padding: "0.75rem", textAlign: "right" }}>Wins</th>
-                    <th style={{ padding: "0.75rem", textAlign: "right" }}>Date</th>
+                    <th className="px-4 py-3 text-center">Rank</th>
+                    <th className="px-4 py-3">Player</th>
+                    <th className="px-4 py-3 text-right">Wins</th>
+                    <th className="px-4 py-3 text-right">Date</th>
                   </tr>
                 </thead>
                 <tbody>
                   {leaderboard.map((entry, index) => (
                     <tr
                       key={entry.id}
-                      style={{
-                        borderBottom: "1px solid #4b5563",
-                        backgroundColor: index % 2 === 0 ? "#1f2937" : "#111827",
-                      }}
+                      className={`${
+                        index % 2 === 0 ? "bg-gray-800" : "bg-gray-900"
+                      } border-b border-gray-700`}
                     >
-                      <td style={{ padding: "0.75rem", textAlign: "center" }}>
-                        {getRankIcon(index)}
-                        <div style={{ fontSize: "0.75rem", marginTop: "0.25rem" }}>
-                          {index + 1}
+                      <td className="px-4 py-3 text-center">
+                        <div className="flex flex-col items-center">
+                          {getRankIcon(index)}
+                          <span className="text-xs mt-1">{index + 1}</span>
                         </div>
                       </td>
-                      <td style={{ padding: "0.75rem" }}>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.5rem",
-                          }}
-                        >
-                          <span style={{ fontSize: "1.25rem" }}>{entry.emoji}</span>
-                          <span style={{ fontWeight: index < 3 ? "bold" : "normal" }}>
-                            {entry.name}
-                          </span>
-                        </div>
+                      <td className="px-4 py-3 flex items-center gap-2">
+                        <span className="text-xl">{entry.emoji}</span>
+                        <span className={`${index < 3 ? "font-bold" : ""}`}>
+                          {entry.name}
+                        </span>
                       </td>
-                      <td
-                        style={{
-                          padding: "0.75rem",
-                          textAlign: "right",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {entry.wins}
-                      </td>
-                      <td
-                        style={{ padding: "0.75rem", textAlign: "right", color: "#9ca3af" }}
-                      >
+                      <td className="px-4 py-3 text-right font-bold">{entry.wins}</td>
+                      <td className="px-4 py-3 text-right text-gray-400">
                         {entry.date}
                       </td>
                     </tr>
@@ -195,28 +120,11 @@ const Leaderboard = () => {
             </div>
           )}
 
-          <div
-            style={{
-              padding: "1.5rem",
-              textAlign: "center",
-              color: "#9ca3af",
-              fontSize: "0.875rem",
-            }}
-          >
+          <div className="p-6 text-center text-gray-400 text-sm">
             Win more games to climb the leaderboard!
           </div>
         </div>
       </div>
-
-      {/* Spinner animation */}
-      <style>
-        {`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}
-      </style>
     </div>
   );
 };
