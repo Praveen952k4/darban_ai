@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { sidebarLinks } from "../../assets/assets";
 
-const Sidebar = () => {
+const SideBar = () => {
   const location = useLocation();
   const pathname = location.pathname;
 
@@ -40,4 +40,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default SideBar;

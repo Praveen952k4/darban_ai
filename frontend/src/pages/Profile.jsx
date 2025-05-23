@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from '../components/Navbar';
 import Bottombar from '../components/Bottombar';
-import Sidebar from '../components/SideBar';
+import SideBar from '../components/SideBar';
 import Profile from '../components/Profile';
 
 const Help = () => {
@@ -9,7 +9,7 @@ const Help = () => {
      <div className="min-h-screen w-full bg-black text-white flex flex-col">
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar/>
+        <SideBar/>
         <div className="flex-1 p-4 overflow-y-auto h-full">
           <Profile />
         </div>

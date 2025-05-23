@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import Sidebar from '../components/SideBar';
+import SideBar from '../components/SideBar';
 import Bottombar from '../components/Bottombar';
 import PlayGames from '../components/playgames';
 
@@ -9,7 +9,7 @@ const Games = () => {
     <div className="min-h-screen w-full bg-black text-white flex flex-col">
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        <SideBar />
         <div className="flex-1 p-4">
           <PlayGames />
         </div>

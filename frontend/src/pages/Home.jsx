@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import Sidebar from '../components/SideBar';
+import SideBar from '../components/SideBar';
 import Bottombar from '../components/Bottombar';
 import Welcome from '../components/Welcome';
 
@@ -9,7 +9,7 @@ const Home = () => {
     <div className="min-h-screen w-full bg-black text-white flex flex-col">
       <Navbar />
       <div className="flex flex-1">
-        <Sidebar />
+        <SideBar />
         <div className="flex-1 p-4">
             <Welcome />
         </div>
