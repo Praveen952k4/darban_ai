@@ -1,60 +1,77 @@
 import React from "react";
-import { useGame } from "./GameContext"; // Adjust path as needed
+import { useGame } from "./GameContext";
+import AudioService from "../Music/AudioService";
 
 const GameBoard = () => {
   const { state, initiateMove } = useGame();
-  const { board, winningCells, status, selectedTheme } = state;
+  const { board, winningCells, status, selectedTheme, pendingMove } = state;
+
+  const isGameWon = status === "won";
 
   const isWinningCell = (row, col) => {
-    if (!winningCells) return false;
-    return winningCells.some(cell => cell.row === row && cell.col === col);
+    return winningCells?.some(cell => cell.row === row && cell.col === col) || false;
   };
 
-  const canClick = status === "playing";
+  const isPendingMove = (row, col) => {
+    return pendingMove?.row === row && pendingMove?.col === col;
+  };
+
+  const handleCellClick = (row, col) => {
+    if (status === "playing" && !board[row][col]) {
+      AudioService.getInstance().playSound("click");
+      initiateMove(row, col);
+    }
+  };
 
   return (
     <div
-      className={`grid grid-cols-3 gap-2 justify-center mx-auto p-4 rounded-md
-        ${selectedTheme.background} ${selectedTheme.borderColor} border-4
-        max-w-[280px] md:max-w-[480px] lg:max-w-[560px]`}
-      // max width grows with screen size: 280px mobile, 480px medium, 560px large screens
-      style={{ 
-        // Keep aspect ratio for cells and increase font size on larger screens
-        fontSize: '2rem',
-      }}
-    >
-      {board.map((row, rowIndex) =>
-        row.map((cell, colIndex) => {
-          const isWinnerCell = isWinningCell(rowIndex, colIndex);
-          return (
-            <div
-              key={`${rowIndex}-${colIndex}`}
-              className={`flex items-center justify-center 
-                text-4xl md:text-6xl lg:text-7xl rounded-md 
-                cursor-${canClick && !cell ? "pointer" : "default"}
-                ${selectedTheme.cellBackground} ${selectedTheme.borderColor} border-2
-                ${isWinnerCell ? "bg-yellow-300" : ""}`}
-              style={{ userSelect: "none", aspectRatio: "1 / 1" }}
-              onClick={() => {
-                if (canClick && !cell) {
-                  initiateMove(rowIndex, colIndex);
-                }
-              }}
-              role="button"
-              tabIndex={canClick && !cell ? 0 : -1}
-              onKeyDown={e => {
-                if ((e.key === "Enter" || e.key === " ") && canClick && !cell) {
-                  initiateMove(rowIndex, colIndex);
-                }
-              }}
-              aria-label={`Cell ${rowIndex + 1}, ${colIndex + 1}`}
-            >
-              {cell ? cell.emoji : ""}
-            </div>
-          );
-        })
-      )}
-    </div>
+  className={`mx-auto p-3 rounded-xl ${
+    selectedTheme.background || ""
+  } w-[320px] h-[320px] sm:w-[360px] sm:h-[360px] md:w-[420px] md:h-[420px]`}
+>
+  <div className="grid grid-cols-3 gap-2 sm:gap-3 h-full w-full">
+    {board.map((row, rowIndex) =>
+      row.map((cell, colIndex) => {
+        const isWinner = isGameWon && isWinningCell(rowIndex, colIndex);
+        const isPending = isPendingMove(rowIndex, colIndex);
+        const isCellEmpty = !cell && status === "playing";
+
+        const baseClasses =
+          "aspect-square rounded-xl shadow-md flex items-center justify-center transition-all duration-200 border-2";
+        const cursorClass = isCellEmpty ? "cursor-pointer hover:scale-105" : "cursor-not-allowed";
+        const winnerClass = isWinner
+          ? "bg-green-100/30 animate-winner-pulse"
+          : status === "won"
+          ? "opacity-75"
+          : "";
+        const pendingClass = isPending
+          ? "ring-2 ring-yellow-300 ring-opacity-70 animate-pulse"
+          : "";
+
+        return (
+          <button
+            key={`${rowIndex}-${colIndex}`}
+            className={`${baseClasses} ${selectedTheme.cellBackground} ${selectedTheme.borderColor} ${cursorClass} ${winnerClass} ${pendingClass}`}
+            onClick={() => handleCellClick(rowIndex, colIndex)}
+            disabled={status !== "playing" || !!cell}
+            aria-label={`Cell ${rowIndex}-${colIndex}`}
+          >
+            {cell && (
+              <span
+                className={`text-[2.5rem] sm:text-[3rem] md:text-[3.5rem] leading-none ${
+                  cell.player === 1 ? "text-player1" : "text-player2"
+                }`}
+              >
+                {cell.emoji}
+              </span>
+            )}
+          </button>
+        );
+      })
+    )}
+  </div>
+</div>
+
   );
 };
 

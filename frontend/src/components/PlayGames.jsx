@@ -1,4 +1,6 @@
-import React from "react";
+
+import React, { useEffect } from "react";
+
 import { GameProvider, useGame } from "./GameContext";
 import { useNavigate } from "react-router-dom";
 import GameStatus from "./GameStatus";
@@ -7,18 +9,31 @@ import GameBoard from "./GameBoard";
 import BoardThemeSelector from "./BoardThemeSelector";
 import EmojiSelector from "./EmojiSelector";
 import WinnerDialog from "./WinnerDialog";
-
+import AudioService from "../Music/AudioService"
+import MusicControl from "./MusicControl";
+import SoundEffectsControl from "./SoundEffectsControl";
 const GameContent = () => {
   const { state } = useGame();
   const { status, currentPlayer, pendingMove } = state;
-  const navigate = useNavigate();
-
+   const navigate = useNavigate();
   const handleHelpClick = () => {
     navigate("/help");
   };
+  useEffect(() => {
+    const audioService = AudioService.getInstance();
+
+    if (status === "won") {
+      audioService.playSound("emoji");
+      if (audioService.isMusicOn()) {
+        audioService.playMusic("victory");
+      }
+    }
+  }, [status]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white relative">
+    <div className="w-full max-w-4xl mx-auto px-4 py-8 relative">
+      
+
       <div className="flex justify-end">
         <button
           onClick={handleHelpClick}
@@ -29,10 +44,9 @@ const GameContent = () => {
           Need Help?
         </button>
       </div>
-
       <WinnerDialog />
 
-      <h1 className="text-5xl md:text-6xl font-extrabold tracking-wide text-center mb-6 bg-gradient-to-r from-yellow-400 via-pink-500 to-red-500 text-transparent bg-clip-text animate-pulse">
+      <h1 className="text-4xl font-bold text-center mb-6 tracking-wide bg-gradient-to-r from-yellow-400 via-pink-500 to-red-500 text-transparent bg-clip-text animate-pulse">
         Blink Tac Toe
       </h1>
 
@@ -46,10 +60,14 @@ const GameContent = () => {
           </div>
           <BoardThemeSelector />
         </div>
-      ) : (
+      ) : status === "playing" && (
         <div>
           <div className="mb-8">
             <GameBoard />
+            {pendingMove && (
+              <div className="flex justify-center mt-4">
+              </div>
+            )}
           </div>
 
           {pendingMove && (
@@ -64,9 +82,10 @@ const GameContent = () => {
         </div>
       )}
 
-      <hr className="my-8 border-t border-gray-300" />
+      <hr className="my-8 border-gray-700" />
 
-      <div className="text-center text-sm text-gray-400">
+
+      <div className="text-center text-sm text-gray-500">
         <p>Make a line of three of your emojis to win!</p>
         <p>Remember: You can only have 3 emojis on the board at once.</p>
         <p>When you place your 4th emoji, your oldest emoji will vanish.</p>
@@ -78,7 +97,7 @@ const GameContent = () => {
 const PlayGames = () => {
   return (
     <GameProvider>
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      <div className="min-h-screen bg-gradient-to-b from-gray-950 to-black text-white">
         <GameContent />
       </div>
     </GameProvider>
