@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const user = {
@@ -9,9 +10,11 @@ const Navbar = () => {
   return (
     <nav className="flex justify-between items-center bg-gray-900 px-6 py-4 shadow-md">
       {/* Logo */}
-      <div className="text-2xl font-bold text-amber-100">
-        <span className="cursor-pointer">Blink Tac Toe</span>
-      </div>
+      <Link to="/" className="text-2xl font-bold text-amber-100 cursor-pointer">
+        Blink Tac Toe
+      </Link>
+
+     
 
       {/* Right side: Profile */}
       <div className="flex items-center space-x-4">

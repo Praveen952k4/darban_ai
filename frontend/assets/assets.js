@@ -1,6 +1,8 @@
+import {homeIcon} from "./home.svg"
+
 export const sidebarLinks = [
     {
-      imgURL: "./home.svg",
+      imgURL: homeIcon,
       route: "/",
       label: "Home",
     },
@@ -11,7 +13,7 @@ export const sidebarLinks = [
     },
     {
       imgURL: "./heart.svg",
-      route: "/activity",
+      route: "/online",
       label: "Online",
     },
     {

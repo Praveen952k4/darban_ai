@@ -6,6 +6,7 @@ import Games from './pages/Games'
 import Help from './pages/Help'
 import LeaderBoardPages from './pages/LeaderBoardPages'
 import Profile from './pages/Profile'
+import Computer from './pages/Computer'
 
 function App() {
   
@@ -16,6 +17,7 @@ function App() {
         <Route path="/game" element={<Games />}/>
         <Route path="/leaderboard" element={<LeaderBoardPages />}/>
         <Route path="/help" element={<Help />}/>
+        <Route path='/online' element={<Computer />} />
         <Route path="/profile" element={<Profile />}/>
       </Routes>
   )
