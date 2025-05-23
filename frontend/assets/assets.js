@@ -1,37 +1,40 @@
 
 
+import { FaHome, FaGamepad, FaHeart, FaTrophy, FaQuestionCircle, FaUser } from 'react-icons/fa';
+
 export const sidebarLinks = [
-    {
-      imgURL: "./home.svg",
-      route: "/",
-      label: "Home",
-    },
-    {
-      imgURL: "./search.svg",
-      route: "/game",
-      label: "Play Games",
-    },
-    {
-      imgURL: "./heart.svg",
-      route: "/online",
-      label: "Online",
-    },
-    {
-      imgURL: "./create.svg",
-      route: "/leaderboard",
-      label: "Leaderboard",
-    },
-    {
-      imgURL: "./community.svg",
-      route: "/help",
-      label: "Help",
-    },
-    {
-      imgURL: "./user.svg",
-      route: "/profile",
-      label: "Profile",
-    },
-  ];
+  {
+    icon: FaHome,
+    route: "/",
+    label: "Home",
+  },
+  {
+    icon: FaGamepad,
+    route: "/game",
+    label: "Play Games",
+  },
+  {
+    icon: FaHeart,
+    route: "/online",
+    label: "Online",
+  },
+  {
+    icon: FaTrophy,
+    route: "/leaderboard",
+    label: "Leaderboard",
+  },
+  {
+    icon: FaQuestionCircle,
+    route: "/help",
+    label: "Help",
+  },
+  {
+    icon: FaUser,
+    route: "/profile",
+    label: "Profile",
+  },
+];
+
 
 export const EmojiCategory=[
   {

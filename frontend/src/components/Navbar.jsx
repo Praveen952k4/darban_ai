@@ -1,5 +1,8 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import { FaUserCircle } from "react-icons/fa";
+
+
 
 const Navbar = () => {
   const user = {
@@ -19,11 +22,7 @@ const Navbar = () => {
       {/* Right side: Profile */}
       <div className="flex items-center space-x-4">
         <p className="text-amber-50 font-medium">{user.name}</p>
-        <img
-          src={user.photo}
-          alt="Profile"
-          className="w-10 h-10 rounded-full border border-gray-300"
-        />
+        <FaUserCircle className="text-amber-50 w-10 h-10" />
       </div>
     </nav>
   );
