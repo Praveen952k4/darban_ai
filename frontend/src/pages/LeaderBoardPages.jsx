@@ -6,7 +6,7 @@ import Leaderboard from '../components/Leaderboard';
 
 const LeaderBoardPages = () => {
    return (
-     <div className="min-h-screen w-full bg-black text-white flex flex-col">
+     <div className="min-h-screen w-full bg-black text-white flex flex-col pb-9">
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
         <SideBar />

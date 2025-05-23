@@ -3,13 +3,10 @@ import Navbar from '../components/Navbar';
 import SideBar from '../components/SideBar';
 import Bottombar from '../components/Bottombar';
 import Settings from '../components/Settings';
-import MusicControl from '../components/MusicControl';
-import SoundEffectsControl from '../components/SoundEffectsControl';
-import ProfileCom from '../components/ProfileCom';
 
 const Profile = () => {
    return (
-    <div className="min-h-screen w-full bg-black text-white flex flex-col">
+    <div className="min-h-screen w-full bg-black text-white flex flex-col pb-9">
       <Navbar />
       <div className="flex flex-1">
         <SideBar />

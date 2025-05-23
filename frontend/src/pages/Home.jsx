@@ -6,7 +6,7 @@ import Welcome from '../components/Welcome';
 
 const Home = () => {
   return (
-    <div className="min-h-screen w-full bg-black text-white flex flex-col">
+    <div className="min-h-screen w-full bg-black text-white flex flex-col pb-9">
       <Navbar />
       <div className="flex flex-1">
         <SideBar />
