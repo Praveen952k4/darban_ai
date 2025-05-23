@@ -45,8 +45,7 @@ const Leaderboard = () => {
     <div className="min-h-screen w-full bg-gradient-to-b from-slate-900 to-black text-white px-4 sm:px-8 py-8">
       <div className="max-w-5xl mx-auto w-full">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between items-center mb-8 gap-4 text-center">
-          <button
+        <button
             onClick={() => {
               audioService.playSound("click");
               window.history.back();
@@ -55,10 +54,12 @@ const Leaderboard = () => {
           >
             Back
           </button>
-
-          <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-500 to-pink-500 bg-clip-text text-transparent">
+        <div className="flex flex-col sm:flex-row sm:justify-between items-center mb-8 gap-4 text-center">
+          <h1 className="w-full text-center text-xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-500 to-pink-500 bg-clip-text text-transparent">
             Leaderboard
           </h1>
+
+
 
           <div className="w-[80px]" />
         </div>
