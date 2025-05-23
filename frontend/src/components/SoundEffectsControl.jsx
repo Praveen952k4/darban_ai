@@ -1,42 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { Volume1, VolumeX } from "lucide-react";
 import AudioService from "../Music/AudioService";
 
-const SoundEffectsControl = () => {
-  const [areSoundsEnabled, setAreSoundsEnabled] = useState(true);
+const audio = AudioService.getInstance();
 
-  useEffect(() => {
-    const audioService = AudioService.getInstance();
-    setAreSoundsEnabled(audioService.areSoundsOn());
-  }, []);
+const SoundEffectsControl = ({ className = "" }) => {
+  const [isSoundOn, setIsSoundOn] = useState(audio.areSoundsOn());
 
-  const toggleSoundEffects = () => {
-    const audioService = AudioService.getInstance();
-    const isEnabled = audioService.toggleSoundEffects();
-    setAreSoundsEnabled(isEnabled);
-
-    if (isEnabled) {
-      audioService.playSound("click");
+  const handleToggleSoundEffects = () => {
+    const newState = audio.toggleSoundEffects();
+    setIsSoundOn(newState);
+    if (newState) {
+      audio.playSound("click");
     }
   };
 
   return (
     <button
-      onClick={toggleSoundEffects}
-      title={areSoundsEnabled ? "Mute Sound Effects" : "Enable Sound Effects"}
-      style={{
-        border: "1px solid #374151",
-        borderRadius: "9999px",
-        backgroundColor: "transparent",
-        padding: "0.5rem",
-        cursor: "pointer",
-        fontSize: "1.25rem",
-        color: areSoundsEnabled ? "#facc15" : "#9ca3af",
-        transition: "background-color 0.2s ease",
-      }}
-      onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#1f2937")}
-      onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+      onClick={handleToggleSoundEffects}
+      className={`relative p-2 rounded-full hover:bg-gray-200 transition ${className}`}
+      title={isSoundOn ? "Turn sound effects off" : "Turn sound effects on"}
     >
-      {areSoundsEnabled ? "🔔" : "🔕"}
+      {isSoundOn ? <Volume1 size={20} /> : <VolumeX size={20} />}
     </button>
   );
 };

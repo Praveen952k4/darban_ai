@@ -1,5 +1,14 @@
+// src/context/GameContext.js
 import React, { createContext, useContext, useReducer } from "react";
+import AudioService from "../Music/AudioService";
 import { boardThemes } from "../../assets/assets";
+
+const audio = AudioService.getInstance();
+
+const fallbackBoardThemes = [
+  { name: "default", background: "#ffffff" },
+  { name: "dark", background: "#333333" }
+];
 
 const createEmptyBoard = () => [
   [null, null, null],
@@ -22,7 +31,7 @@ const initialState = {
   player2: { ...initialPlayerState },
   winner: null,
   winningCells: null,
-  selectedTheme: boardThemes[0],
+  selectedTheme: boardThemes[0] || fallbackBoardThemes[0],
   pendingMove: null
 };
 
@@ -100,22 +109,26 @@ const placeEmojiOnBoard = (state, row, col, emoji) => {
   newState.pendingMove = null;
 
   const { winner, winningCells } = checkWinner(newBoard);
-
   if (winner) {
     newState.status = "won";
     newState.winner = winner;
     newState.winningCells = winningCells;
     newState[playerKey].score += 1;
+    audio.stopMusic();
+    audio.playSound("win");
+    audio.playMusic("victory");
     return newState;
   }
 
   newState.currentPlayer = currentPlayer === 1 ? 2 : 1;
+  audio.playSound("place");
   return newState;
 };
 
 const gameReducer = (state, action) => {
   switch (action.type) {
     case "SELECT_CATEGORY": {
+      audio.playSound("click");
       const newState = { ...state };
       if (action.player === 1) newState.player1.category = action.category;
       else newState.player2.category = action.category;
@@ -126,16 +139,19 @@ const gameReducer = (state, action) => {
       return newState;
     }
 
-    case "INITIATE_MOVE":
+    case "INITIATE_MOVE": {
       if (state.board[action.row][action.col] !== null) {
         return state;
       }
+      audio.playSound("select");
       return { ...state, pendingMove: { row: action.row, col: action.col } };
+    }
 
     case "SELECT_EMOJI": {
       const newState = { ...state };
       const playerKey = action.player === 1 ? "player1" : "player2";
       newState[playerKey].selectedEmoji = action.emoji;
+      audio.playSound("emoji");
 
       if (newState.pendingMove && state.currentPlayer === action.player) {
         const { row, col } = newState.pendingMove;
@@ -148,10 +164,8 @@ const gameReducer = (state, action) => {
     case "PLACE_EMOJI":
       return placeEmojiOnBoard(state, action.row, action.col, action.emoji);
 
-    case "CANCEL_MOVE":
-      return { ...state, pendingMove: null };
-
     case "NEW_ROUND":
+      audio.playSound("click");
       return {
         ...state,
         status: "playing",
@@ -165,12 +179,14 @@ const gameReducer = (state, action) => {
       };
 
     case "RESTART_GAME":
+      audio.playSound("click");
       return {
         ...initialState,
         selectedTheme: state.selectedTheme
       };
 
     case "SELECT_BOARD_THEME":
+      audio.playSound("click");
       return {
         ...state,
         selectedTheme: action.theme

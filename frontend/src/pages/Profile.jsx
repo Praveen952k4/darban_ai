@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '../components/Navbar';
 import SideBar from '../components/SideBar';
 import Bottombar from '../components/Bottombar';
-import ProfileCom from '../components/ProfileCom';
+import MusicControl from '../components/MusicControl';
 const Help = () => {
   return (
      <div className="min-h-screen w-full bg-black text-white flex flex-col">
@@ -10,7 +10,9 @@ const Help = () => {
       <div className="flex flex-1 overflow-hidden">
         <SideBar />
         <div className="flex-1 p-4">
-          <ProfileCom />
+          {/* <ProfileCom /> */}
+          {/* <Leaderboard /> */}
+          <MusicControl />
         </div>
       </div>
       <Bottombar />

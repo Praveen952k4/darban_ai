@@ -1,45 +1,66 @@
-import React, { useEffect, useState } from "react";
+// src/components/MusicControl.js
+import React, { useState, useEffect } from "react";
+import { Volume2, VolumeX } from "lucide-react";
 import AudioService from "../Music/AudioService";
 
-const MusicControl = () => {
-  const [isMusicEnabled, setIsMusicEnabled] = useState(false);
+const audio = AudioService.getInstance();
+
+const MusicControl = ({ className = "" }) => {
+  const [isMusicOn, setIsMusicOn] = useState(() => {
+    const initialState = audio.isMusicOn();
+    console.log('Initial music state:', initialState);
+    return initialState;
+  });
+
+  const [areSoundsOn, setAreSoundsOn] = useState(() => {
+    const initialState = audio.areSoundsOn();
+    console.log('Initial sound effects state:', initialState);
+    return initialState;
+  });
 
   useEffect(() => {
-    const audioService = AudioService.getInstance();
-    setIsMusicEnabled(audioService.isMusicOn());
-
-    if (audioService.isMusicOn()) {
-      audioService.playMusic();
+    if (isMusicOn) {
+      console.log('Attempting to play music in MusicControl');
+      audio.playMusic().catch(err => {
+        console.error('Failed to play music in MusicControl:', err);
+      });
+    } else {
+      console.log('Stopping music in MusicControl');
+      audio.stopMusic();
     }
-  }, []);
+  }, [isMusicOn]);
 
-  const toggleMusic = () => {
-    const audioService = AudioService.getInstance();
-    const isEnabled = audioService.toggleMusic();
-    setIsMusicEnabled(isEnabled);
+  const handleToggleMusic = () => {
+    audio.playSound("click");
+    const newState = audio.toggleMusic();
+    console.log('Toggled music, new state:', newState);
+    setIsMusicOn(newState);
+  };
 
-    audioService.playSound("click");
+  const handleToggleSoundEffects = () => {
+    audio.playSound("click");
+    const newState = audio.toggleSoundEffects();
+    console.log('Toggled sound effects, new state:', newState);
+    setAreSoundsOn(newState);
   };
 
   return (
-    <button
-      onClick={toggleMusic}
-      title={isMusicEnabled ? "Mute Music" : "Play Music"}
-      style={{
-        border: "1px solid #374151",
-        borderRadius: "9999px",
-        backgroundColor: "transparent",
-        padding: "0.5rem",
-        cursor: "pointer",
-        fontSize: "1.25rem",
-        color: isMusicEnabled ? "#22c55e" : "#9ca3af",
-        transition: "background-color 0.2s ease",
-      }}
-      onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#1f2937")}
-      onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-    >
-      {isMusicEnabled ? "🔊" : "🔇"}
-    </button>
+    <div className={`flex gap-2 ${className}`}>
+      <button
+        onClick={handleToggleMusic}
+        className={`relative p-2 rounded-full hover:bg-gray-200 transition`}
+        title={isMusicOn ? "Turn music off" : "Turn music on"}
+      >
+        {isMusicOn ? <Volume2 size={20} /> : <VolumeX size={20} />}
+      </button>
+      <button
+        onClick={handleToggleSoundEffects}
+        className={`relative p-2 rounded-full hover:bg-gray-200 transition`}
+        title={areSoundsOn ? "Turn sound effects off" : "Turn sound effects on"}
+      >
+        {areSoundsOn ? <Volume2 size={20} /> : <VolumeX size={20} />}
+      </button>
+    </div>
   );
 };
 

@@ -1,6 +1,9 @@
 import React from "react";
 import { useGame } from "./GameContext";
 import { boardThemes } from "../../assets/assets";
+import AudioService from "../Music/AudioService";
+
+const audio = AudioService.getInstance();
 
 const BoardThemeSelector = () => {
   const { state, selectBoardTheme } = useGame();
@@ -25,8 +28,11 @@ const BoardThemeSelector = () => {
           return (
             <button
               key={theme.id}
-              onClick={() => selectBoardTheme(theme)}
               className={buttonClasses}
+              onClick={() => {
+                audio.playSound("click");
+                selectBoardTheme(theme);
+              }}
             >
               <div className={previewClasses}></div>
               <span className="text-xs font-medium text-white">{theme.name}</span>
