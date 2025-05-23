@@ -7,6 +7,21 @@ const HelpPage = () => {
         className="bg-black max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 rounded-xl shadow-2xl relative scrollbar-hide"
         style={{ scrollbarWidth: "none" }}
       >
+        <button
+            onClick={() => {
+              window.history.back();
+            }}
+            style={{
+              padding: "0.5rem 1rem",
+              border: "1px solid white",
+              backgroundColor: "transparent",
+              color: "white",
+              borderRadius: "0.25rem",
+              cursor: "pointer",
+            }}
+          >
+            Back
+          </button>
         {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-3xl font-extrabold text-purple-400">🎮 How To Play</h2>

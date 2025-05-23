@@ -1,0 +1,22 @@
+import React from 'react'
+import Navbar from '../components/Navbar';
+import SideBar from '../components/SideBar';
+import Bottombar from '../components/Bottombar';
+import Leaderboard from '../components/Leaderboard';
+
+const LeaderBoardPages = () => {
+   return (
+     <div className="min-h-screen w-full bg-black text-white flex flex-col">
+      <Navbar />
+      <div className="flex flex-1 overflow-hidden">
+        <SideBar />
+        <div className="flex-1 p-4">
+          <Leaderboard />
+        </div>
+      </div>
+      <Bottombar />
+    </div>
+  );
+}
+
+export default LeaderBoardPages

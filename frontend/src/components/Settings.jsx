@@ -1,12 +1,14 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { VolumeX, Volume1, Volume2 } from "lucide-react";
-import { audioService } from "../Music/AudioService";
+import AudioService from "../Music/AudioService";
+
+const audioService = AudioService.getInstance();
 
 const Settings = () => {
-  const [isMusicEnabled, setIsMusicEnabled] = useState(audioService.getMusicEnabled());
-  const [isSoundEffectsEnabled, setIsSoundEffectsEnabled] = useState(audioService.getSoundEffectsEnabled());
-  const [musicVolume, setMusicVolume] = useState(audioService.getMusicVolume() * 100);
-  const [soundEffectsVolume, setSoundEffectsVolume] = useState(audioService.getSoundEffectsVolume() * 100);
+  const [isMusicEnabled, setIsMusicEnabled] = useState(audioService.isMusicOn());
+  const [isSoundEffectsEnabled, setIsSoundEffectsEnabled] = useState(audioService.areSoundsOn());
+  const [musicVolume, setMusicVolume] = useState(audioService.musicElement.volume * 100);
+  const [soundEffectsVolume, setSoundEffectsVolume] = useState(50); // Default for sound effects
 
   const handleToggleMusic = () => {
     audioService.playSound("click");
@@ -25,13 +27,13 @@ const Settings = () => {
   const handleMusicVolumeChange = (e) => {
     const volume = Number(e.target.value);
     setMusicVolume(volume);
-    audioService.setMusicVolume(volume / 100);
+    audioService.musicElement.volume = volume / 100;
   };
 
   const handleSoundVolumeChange = (e) => {
     const volume = Number(e.target.value);
     setSoundEffectsVolume(volume);
-    audioService.setSoundEffectsVolume(volume / 100);
+    // Since individual sounds are cloned, we can't set global volume here.
     if (isSoundEffectsEnabled) {
       audioService.playSound("select");
     }
@@ -84,6 +86,7 @@ const Settings = () => {
                     value={musicVolume}
                     onChange={handleMusicVolumeChange}
                     className="w-full"
+                    aria-label="Music Volume"
                   />
                   <Volume2 className="h-4 w-4 text-gray-400" />
                 </div>
@@ -113,6 +116,7 @@ const Settings = () => {
                       value={soundEffectsVolume}
                       onChange={handleSoundVolumeChange}
                       className="w-full"
+                      aria-label="Sound Effects Volume"
                     />
                     <Volume1 className="h-4 w-4 text-gray-400" />
                   </div>
