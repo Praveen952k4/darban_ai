@@ -8,7 +8,7 @@ const Settings = () => {
   const [isMusicEnabled, setIsMusicEnabled] = useState(audioService.isMusicOn());
   const [isSoundEffectsEnabled, setIsSoundEffectsEnabled] = useState(audioService.areSoundsOn());
   const [musicVolume, setMusicVolume] = useState(audioService.musicElement.volume * 100);
-  const [soundEffectsVolume, setSoundEffectsVolume] = useState(50); // Default for sound effects
+  const [soundEffectsVolume, setSoundEffectsVolume] = useState(50);
 
   const handleToggleMusic = () => {
     audioService.playSound("click");
@@ -33,7 +33,6 @@ const Settings = () => {
   const handleSoundVolumeChange = (e) => {
     const volume = Number(e.target.value);
     setSoundEffectsVolume(volume);
-    // Since individual sounds are cloned, we can't set global volume here.
     if (isSoundEffectsEnabled) {
       audioService.playSound("select");
     }

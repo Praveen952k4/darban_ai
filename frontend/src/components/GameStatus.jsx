@@ -30,7 +30,6 @@ const GameStatus = () => {
 
   return (
     <div className="flex flex-col items-center gap-6 mb-8">
-      {/* Player Scores */}
       <div className="flex gap-8">
         <div className="flex items-center gap-3 bg-white px-5 py-3 rounded-lg shadow border border-neutral-200">
           <span className="text-2xl">{player1.selectedEmoji}</span>
@@ -44,7 +43,6 @@ const GameStatus = () => {
         </div>
       </div>
 
-      {/* Current Turn */}
       {status === "playing" && (
         <div className="flex items-center gap-4 mt-2">
           <span
@@ -57,8 +55,6 @@ const GameStatus = () => {
           </span>
         </div>
       )}
-
-      {/* Winner */}
       {status === "won" && (
         <div className="text-center mt-4">
           <h2 className={`text-3xl font-bold mb-4 ${getWinnerColor()}`}>

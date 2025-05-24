@@ -1,4 +1,5 @@
-
+import React, { useEffect } from 'react';
+import AudioService from './Music/AudioService';
 import {Routes, Route } from 'react-router-dom'
 import './App.css'
 import Home from './pages/Home'
@@ -9,7 +10,10 @@ import Profile from './pages/Profile'
 import Computer from './pages/Computer'
 
 function App() {
-  
+   useEffect(() => {
+    const audioService = AudioService.getInstance();
+    audioService.playSound('mian'); 
+  }, []);
 
   return (
       <Routes>

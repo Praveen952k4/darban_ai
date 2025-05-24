@@ -12,14 +12,9 @@ const Navbar = () => {
 
   return (
     <nav className="flex justify-between items-center bg-gray-900 px-6 py-4 shadow-md">
-      {/* Logo */}
       <Link to="/" className="text-2xl font-bold text-amber-100 cursor-pointer">
         Blink Tac Toe
       </Link>
-
-     
-
-      {/* Right side: Profile */}
       <div className="flex items-center space-x-4">
         <p className="text-amber-50 font-medium">{user.name}</p>
         <FaUserCircle className="text-amber-50 w-10 h-10" />

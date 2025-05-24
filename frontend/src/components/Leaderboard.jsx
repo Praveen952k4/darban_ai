@@ -64,7 +64,6 @@ const Leaderboard = () => {
           <div className="w-[80px]" />
         </div>
 
-        {/* Leaderboard Box */}
         <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
           <div className="p-6">
             <h2 className="text-xl font-bold flex items-center gap-2">
@@ -73,8 +72,6 @@ const Leaderboard = () => {
             </h2>
             <hr className="my-4 border-gray-600" />
           </div>
-
-          {/* Loading Spinner */}
           {isLoading ? (
             <div className="flex justify-center items-center h-40">
               <div className="w-12 h-12 border-4 border-white border-b-transparent rounded-full animate-spin" />

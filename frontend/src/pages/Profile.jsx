@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import SideBar from '../components/SideBar';
 import Bottombar from '../components/Bottombar';
 import Settings from '../components/Settings';
+import AudioService from '../Music/AudioService';
 
 const Profile = () => {
+    useEffect(() => {
+    const audioService = AudioService.getInstance();
+    audioService.playSound('click'); 
+  }, []);
    return (
     <div className="min-h-screen w-full bg-black text-white flex flex-col pb-9">
       <Navbar />

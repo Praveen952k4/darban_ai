@@ -22,7 +22,6 @@ const HelpPage = () => {
           >
             Back
           </button>
-        {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-3xl font-extrabold text-purple-400">🎮 How To Play</h2>
           <p className="text-sm text-gray-400 mt-1">
@@ -30,9 +29,7 @@ const HelpPage = () => {
           </p>
         </div>
 
-        {/* Sections */}
         <div className="space-y-6 text-sm text-gray-300">
-          {/* Setup */}
           <section>
             <h3 className="font-semibold text-lg text-purple-300 mb-1">🛠️ Setup</h3>
             <ul className="list-disc ml-5 space-y-1">
@@ -43,7 +40,6 @@ const HelpPage = () => {
           </section>
           <hr className="border-gray-700" />
 
-          {/* Gameplay */}
           <section>
             <h3 className="font-semibold text-lg text-purple-300 mb-1">🎲 Gameplay</h3>
             <ul className="list-disc ml-5 space-y-1">
@@ -55,7 +51,6 @@ const HelpPage = () => {
           </section>
           <hr className="border-gray-700" />
 
-          {/* Vanishing Rule */}
           <section>
             <h3 className="font-semibold text-lg text-purple-300 mb-1">💨 The Vanishing Rule</h3>
             <ul className="list-disc ml-5 space-y-1">
@@ -67,7 +62,6 @@ const HelpPage = () => {
           </section>
           <hr className="border-gray-700" />
 
-          {/* Winning */}
           <section>
             <h3 className="font-semibold text-lg text-purple-300 mb-1">🏆 Winning</h3>
             <ul className="list-disc ml-5 space-y-1">
@@ -77,7 +71,6 @@ const HelpPage = () => {
           </section>
           <hr className="border-gray-700" />
 
-          {/* Tips & Fun */}
           <section className="text-center text-sm italic text-gray-400 pt-4">
             💡 Tip: Choose a category with visually unique emojis for easier tracking!<br />
             🎉 Have fun and may the emoji legends be with you!

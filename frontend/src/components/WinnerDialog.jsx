@@ -11,7 +11,6 @@ const WinnerDialog = () => {
     if (status === "won" && winner) {
       setOpen(true);
 
-      // Confetti
       const colors = winner === 1 
         ? ["#8B5CF6", "#A78BFA"]
         : ["#EC4899", "#F472B6"];

@@ -1,6 +1,6 @@
-// src/context/GameContext.js
+
 import React, { createContext, useContext, useReducer, useEffect } from "react";
-import AudioService from "../Music/AudioService"; // Fixed import path
+import AudioService from "../Music/AudioService"; 
 import { boardThemes } from "../../assets/assets";
 
 const audio = AudioService.getInstance();
@@ -116,7 +116,6 @@ const placeEmojiOnBoard = (state, row, col, emoji) => {
     newState.winningCells = winningCells;
     newState[playerKey].score += 1;
     
-    // Handle victory audio
     try {
       audio.stopMusic();
       audio.playSound("win");
@@ -151,7 +150,6 @@ const gameReducer = (state, action) => {
 
       if (newState.player1.category && newState.player2.category) {
         newState.status = "playing";
-        // Start background music when game begins
         if (!state.audioInitialized) {
           audio.initializeAudioContext();
           newState.audioInitialized = true;
@@ -190,7 +188,6 @@ const gameReducer = (state, action) => {
 
     case "NEW_ROUND":
       audio.playSound("click");
-      // Resume background music for new round
       audio.playMusic("main").catch(err => 
         console.log('Background music will resume after user interaction')
       );
@@ -232,13 +229,11 @@ const GameContext = createContext();
 export const GameProvider = ({ children }) => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
-  // Initialize audio on first user interaction
   useEffect(() => {
     const handleFirstInteraction = () => {
       if (!state.audioInitialized) {
         dispatch({ type: "INITIALIZE_AUDIO" });
       }
-      // Remove listeners after first interaction
       document.removeEventListener('click', handleFirstInteraction);
       document.removeEventListener('keydown', handleFirstInteraction);
       document.removeEventListener('touchstart', handleFirstInteraction);
