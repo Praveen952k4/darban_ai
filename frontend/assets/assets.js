@@ -167,3 +167,22 @@ export const boardThemes = [
     borderColor: "border-yellow-400"
   }
 ];
+
+
+import mainMp3 from './sounds/main.mp3';
+import victoryMp3 from './sounds/victory.mp3';
+import clickMp3 from './sounds/click.mp3';
+import emojiMp3 from './sounds/emoj.mp3';
+import winMp3 from './sounds/win.mp3';
+import selectMp3 from './sounds/select.mp3';
+import placeMp3 from './sounds/place.mp3';
+
+export const audioAssets = {
+  main: mainMp3,
+  victory: victoryMp3,
+  click: clickMp3,
+  emoji: emojiMp3,
+  win: winMp3,
+  select: selectMp3,
+  place: placeMp3,
+};

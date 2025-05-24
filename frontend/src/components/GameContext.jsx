@@ -1,6 +1,6 @@
 // src/context/GameContext.js
-import React, { createContext, useContext, useReducer } from "react";
-import AudioService from "../Music/AudioService";
+import React, { createContext, useContext, useReducer, useEffect } from "react";
+import AudioService from "../Music/AudioService"; // Fixed import path
 import { boardThemes } from "../../assets/assets";
 
 const audio = AudioService.getInstance();
@@ -31,8 +31,9 @@ const initialState = {
   player2: { ...initialPlayerState },
   winner: null,
   winningCells: null,
-  selectedTheme: boardThemes[0] || fallbackBoardThemes[0],
-  pendingMove: null
+  selectedTheme: boardThemes?.[0] || fallbackBoardThemes[0],
+  pendingMove: null,
+  audioInitialized: false
 };
 
 const checkWinner = (board) => {
@@ -114,9 +115,20 @@ const placeEmojiOnBoard = (state, row, col, emoji) => {
     newState.winner = winner;
     newState.winningCells = winningCells;
     newState[playerKey].score += 1;
-    audio.stopMusic();
-    audio.playSound("win");
-    audio.playMusic("victory");
+    
+    // Handle victory audio
+    try {
+      audio.stopMusic();
+      audio.playSound("win");
+      setTimeout(() => {
+        audio.playMusic("victory").catch(err => 
+          console.log('Victory music will play after user interaction')
+        );
+      }, 500);
+    } catch (err) {
+      console.error('Error playing victory audio:', err);
+    }
+    
     return newState;
   }
 
@@ -127,6 +139,10 @@ const placeEmojiOnBoard = (state, row, col, emoji) => {
 
 const gameReducer = (state, action) => {
   switch (action.type) {
+    case "INITIALIZE_AUDIO":
+      audio.initializeAudioContext();
+      return { ...state, audioInitialized: true };
+
     case "SELECT_CATEGORY": {
       audio.playSound("click");
       const newState = { ...state };
@@ -135,6 +151,14 @@ const gameReducer = (state, action) => {
 
       if (newState.player1.category && newState.player2.category) {
         newState.status = "playing";
+        // Start background music when game begins
+        if (!state.audioInitialized) {
+          audio.initializeAudioContext();
+          newState.audioInitialized = true;
+        }
+        audio.playMusic("main").catch(err => 
+          console.log('Background music will start after user interaction')
+        );
       }
       return newState;
     }
@@ -166,6 +190,10 @@ const gameReducer = (state, action) => {
 
     case "NEW_ROUND":
       audio.playSound("click");
+      // Resume background music for new round
+      audio.playMusic("main").catch(err => 
+        console.log('Background music will resume after user interaction')
+      );
       return {
         ...state,
         status: "playing",
@@ -180,9 +208,11 @@ const gameReducer = (state, action) => {
 
     case "RESTART_GAME":
       audio.playSound("click");
+      audio.stopMusic();
       return {
         ...initialState,
-        selectedTheme: state.selectedTheme
+        selectedTheme: state.selectedTheme,
+        audioInitialized: state.audioInitialized
       };
 
     case "SELECT_BOARD_THEME":
@@ -201,6 +231,29 @@ const GameContext = createContext();
 
 export const GameProvider = ({ children }) => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
+
+  // Initialize audio on first user interaction
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      if (!state.audioInitialized) {
+        dispatch({ type: "INITIALIZE_AUDIO" });
+      }
+      // Remove listeners after first interaction
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+      document.removeEventListener('touchstart', handleFirstInteraction);
+    };
+
+    document.addEventListener('click', handleFirstInteraction);
+    document.addEventListener('keydown', handleFirstInteraction);
+    document.addEventListener('touchstart', handleFirstInteraction);
+
+    return () => {
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+      document.removeEventListener('touchstart', handleFirstInteraction);
+    };
+  }, [state.audioInitialized]);
 
   const selectCategory = (player, category) =>
     dispatch({ type: "SELECT_CATEGORY", player, category });
@@ -223,6 +276,12 @@ export const GameProvider = ({ children }) => {
   const selectBoardTheme = (theme) =>
     dispatch({ type: "SELECT_BOARD_THEME", theme });
 
+  // Audio control methods
+  const toggleMusic = () => audio.toggleMusic();
+  const toggleSoundEffects = () => audio.toggleSoundEffects();
+  const isMusicOn = () => audio.isMusicOn();
+  const areSoundsOn = () => audio.areSoundsOn();
+
   return (
     <GameContext.Provider
       value={{
@@ -234,7 +293,11 @@ export const GameProvider = ({ children }) => {
         placeEmoji,
         newRound,
         restartGame,
-        selectBoardTheme
+        selectBoardTheme,
+        toggleMusic,
+        toggleSoundEffects,
+        isMusicOn,
+        areSoundsOn
       }}
     >
       {children}

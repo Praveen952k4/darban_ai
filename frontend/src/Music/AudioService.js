@@ -1,16 +1,16 @@
-// src/services/AudioService.js
+import { audioAssets } from '../../assets/assets';
 
 const musicTracks = [
-  { name: 'main', file: './music-for-games-153673.mp3', loop: true, volume: 0.4 },
-  { name: 'victory', file: './music-for-games-153673.mp3', loop: false, volume: 0.5 },
+  { name: 'main', file: audioAssets.main, loop: true, volume: 0.4 },
+  { name: 'victory', file: audioAssets.victory, loop: false, volume: 0.5 },
 ];
 
 const soundEffects = [
-  { name: 'click', file: './music-for-games-153673.mp3', volume: 0.3 },
-  { name: 'emoji', file: './music-for-games-153673.mp3', volume: 0.6 },
-  { name: 'win', file: './music-for-games-153673.mp3', volume: 0.5 },
-  { name: 'select', file: './music-for-games-153673.mp3', volume: 0.5 },
-  { name: 'place', file: './music-for-games-153673.mp3', volume: 0.5 },
+  { name: 'click', file: audioAssets.click, volume: 0.3 },
+  { name: 'emoji', file: audioAssets.emoji, volume: 0.6 },
+  { name: 'win', file: audioAssets.win, volume: 0.5 },
+  { name: 'select', file: audioAssets.select, volume: 0.5 },
+  { name: 'place', file: audioAssets.place, volume: 0.5 },
 ];
 
 class AudioService {
@@ -47,14 +47,21 @@ class AudioService {
 
   initSoundEffects() {
     soundEffects.forEach(effect => {
+      if (!effect.file) {
+        console.warn(`No file specified for sound "${effect.name}"`);
+        return;
+      }
       try {
         const audio = new Audio(effect.file);
         audio.volume = effect.volume || 0.5;
-        audio.addEventListener('error', () => {
-          console.error(`Failed to load sound "${effect.name}" at ${effect.file}`);
+        audio.preload = 'auto';
+        audio.addEventListener('error', (e) => {
+          console.error(`Failed to load sound "${effect.name}" at ${effect.file}`, e);
+        });
+        audio.addEventListener('canplaythrough', () => {
+          console.log(`Successfully loaded sound: ${effect.name}`);
         });
         this.soundElements.set(effect.name, audio);
-        console.log(`Loaded sound: ${effect.name}, file: ${effect.file}`);
       } catch (err) {
         console.error(`Failed to initialize sound "${effect.name}":`, err);
       }
@@ -63,10 +70,8 @@ class AudioService {
 
   loadSavedPreferences() {
     try {
-      const musicPref = localStorage.getItem('musicEnabled');
-      const soundPref = localStorage.getItem('soundEffectsEnabled');
-      this.isMusicEnabled = musicPref !== null ? musicPref === 'true' : true;
-      this.areSoundEffectsEnabled = soundPref !== null ? soundPref === 'true' : true;
+      this.isMusicEnabled = true;
+      this.areSoundEffectsEnabled = true;
       console.log('Loaded preferences:', { musicEnabled: this.isMusicEnabled, soundEffectsEnabled: this.areSoundEffectsEnabled });
     } catch (err) {
       console.error('Failed to load audio preferences:', err);
@@ -75,15 +80,13 @@ class AudioService {
 
   savePreferences() {
     try {
-      localStorage.setItem('musicEnabled', String(this.isMusicEnabled));
-      localStorage.setItem('soundEffectsEnabled', String(this.areSoundEffectsEnabled));
       console.log('Saved preferences:', { musicEnabled: this.isMusicEnabled, soundEffectsEnabled: this.areSoundEffectsEnabled });
     } catch (err) {
       console.error('Failed to save audio preferences:', err);
     }
   }
 
-  playMusic(trackName = 'main') {
+  async playMusic(trackName = 'main') {
     console.log('Attempting to play music:', trackName, 'Music enabled:', this.isMusicEnabled);
     if (!this.isMusicEnabled || !this.musicElement) {
       return Promise.resolve();
@@ -101,28 +104,36 @@ class AudioService {
     }
 
     try {
-      this.stopMusic(); // Stop any existing playback
+      this.stopMusic();
+      
       this.musicElement.src = track.file;
       this.musicElement.loop = track.loop ?? true;
       this.musicElement.volume = track.volume ?? 0.4;
+      this.musicElement.preload = 'auto';
 
-      // Check if file can be loaded
-      this.musicElement.addEventListener('error', () => {
-        console.error(`Failed to load music "${trackName}" at ${track.file}`);
-      }, { once: true });
+      const errorHandler = (e) => {
+        console.error(`Failed to load music "${trackName}" at ${track.file}`, e);
+        this.isPlaying = false;
+      };
+      this.musicElement.addEventListener('error', errorHandler, { once: true });
+
+      await new Promise((resolve, reject) => {
+        const loadHandler = () => {
+          this.musicElement.removeEventListener('loadeddata', loadHandler);
+          this.musicElement.removeEventListener('error', errorHandler);
+          resolve();
+        };
+        this.musicElement.addEventListener('loadeddata', loadHandler, { once: true });
+        this.musicElement.load();
+      });
 
       this.isPlaying = true;
-      return this.musicElement.play().then(() => {
-        console.log(`Successfully playing music: ${trackName}`);
-      }).catch(err => {
-        this.isPlaying = false;
-        console.error(`Failed to play music "${trackName}":`, err);
-        throw err;
-      });
+      await this.musicElement.play();
+      console.log(`Successfully playing music: ${trackName}`);
     } catch (err) {
       this.isPlaying = false;
-      console.error(`Failed to set up music "${trackName}":`, err);
-      return Promise.reject(err);
+      console.error(`Failed to play music "${trackName}":`, err);
+      throw err;
     }
   }
 
@@ -147,11 +158,16 @@ class AudioService {
 
     try {
       const clone = original.cloneNode(true);
-      clone.play().catch(err => {
-        console.error(`Failed to play sound "${soundName}":`, err);
-      });
+      clone.volume = original.volume;
+      
+      const playPromise = clone.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.error(`Failed to play sound "${soundName}":`, err);
+        });
+      }
     } catch (err) {
-      console.error(`Failed to clone sound "${soundName}":`, err);
+      console.error(`Failed to clone/play sound "${soundName}":`, err);
     }
   }
 
@@ -159,7 +175,7 @@ class AudioService {
     this.isMusicEnabled = !this.isMusicEnabled;
     console.log('Music toggled to:', this.isMusicEnabled);
     if (this.isMusicEnabled) {
-      this.playMusic();
+      this.playMusic().catch(err => console.error('Failed to start music after toggle:', err));
     } else {
       this.stopMusic();
     }
@@ -180,6 +196,11 @@ class AudioService {
 
   areSoundsOn() {
     return this.areSoundEffectsEnabled;
+  }
+
+  initializeAudioContext() {
+    console.log('Initializing audio context');
+    this.playMusic().catch(err => console.log('Music initialization error:', err));
   }
 }
 

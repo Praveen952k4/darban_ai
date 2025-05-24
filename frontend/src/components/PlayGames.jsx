@@ -10,8 +10,6 @@ import BoardThemeSelector from "./BoardThemeSelector";
 import EmojiSelector from "./EmojiSelector";
 import WinnerDialog from "./WinnerDialog";
 import AudioService from "../Music/AudioService"
-import MusicControl from "./MusicControl";
-import SoundEffectsControl from "./SoundEffectsControl";
 const GameContent = () => {
   const { state } = useGame();
   const { status, currentPlayer, pendingMove } = state;
